@@ -98,7 +98,7 @@ function trailsHandler(req, res) {
 }
 
 function movieHandler(req, res) {
-    console.log(req.query);
+    // console.log(req.query);
     superagent(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIEDB_API_KEY}&query=${req.query.search_query}&page=1`)
 
         .then(movieApiDataResponse => {
