@@ -113,7 +113,8 @@ function movieHandler(req, res) {
 
 
 
-////////////////Constructors//////////////////
+///////////////////////////////////////Constructors/////////////////////////////////
+
 function Location(city, locationDataFromApi) {
     this.search_query = city;
     this.formatted_query = locationDataFromApi[0].display_name;
