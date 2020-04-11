@@ -113,7 +113,7 @@ function movieHandler(req, res) {
 }
 
 function yelpHandler(req, res){
-    superagent(`https://api.yelp.com/v3/businesses/search?location=${req.query.city}`)
+    superagent(`https://api.yelp.com/v3/businesses/search?location=${req.query.search_query}`)
     .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
     .then(yelpApiData =>{
         let yelpJsonData = yelpApiData.body.businesses;
@@ -121,7 +121,7 @@ function yelpHandler(req, res){
           return new Yelp(value);
         })
         res.status(200).json(createMyobj);
-    })
+    }).catch( error =>{ errorhandler(req, res, error)})
 
 }
 
