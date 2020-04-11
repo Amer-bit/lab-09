@@ -26,6 +26,7 @@ app.get('/location', LocationHandler);
 app.get('/weather', weatherHandler);
 app.get('/trails', trailsHandler);
 app.get('/movies', movieHandler);
+app.get('/yelp', yelpHandler)
 
 //////////////////Routes Handlers/////////////////////
 
@@ -111,6 +112,19 @@ function movieHandler(req, res) {
         }).catch( error =>{ errorhandler(req, res, error)})
 }
 
+function yelpHandler(req, res){
+    superagent(`https://api.yelp.com/v3/businesses/search?location=${req.query.city}`)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then(yelpApiData =>{
+        let yelpJsonData = yelpApiData.body.businesses;
+        let createMyobj = yelpJsonData.map ( value => {
+          return new Yelp(value);
+        })
+        res.status(200).json(createMyobj);
+    })
+
+}
+
 
 
 ///////////////////////////////////////Constructors/////////////////////////////////
@@ -144,9 +158,16 @@ function Movie(movieData){
     this.overview = movieData.overview;
     this.average_votes = movieData.vote_average;
     this.total_votes = movieData.vote_count;
-    this.img_url = movieData.poster_path;
+    this.img_url = `https://image.tmdb.org/t/p/w500${movieData.poster_path}`;
     this.popularity = movieData.popularity;
     this.released_on = movieData.release_date;
+}
+function Yelp(yelpData) {
+    this.name = yelpData.name;
+    this.img_url = yelpData.image_url;
+    this.price = yelpData.price;
+    this.rating = yelpData.rating;
+    this.url = yelpData.url;
 }
 
 function errorhandler(req, res, error) {
